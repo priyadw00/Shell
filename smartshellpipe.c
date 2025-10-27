@@ -1,9 +1,3 @@
-//----------------------------
-// Name: Priya Dalal-Whelan
-// Date: Spring 2024
-// Class: Operating Systems
-// Assignment: Smart Shell
-//----------------------------
 
 #include <string.h>    /* for strcpy and strtok */
 #include <unistd.h> 
@@ -98,10 +92,9 @@ void execute_cmd(char * cmd)
 
         exit(1);
     }
-    /*partent waits for child to finish*/
+    /*Parent waits for child to finish*/
 
     else {
-        //printf("I'm the parent, I'm going to wait \n"); 
         wait(0);
 
     }
@@ -109,7 +102,6 @@ void execute_cmd(char * cmd)
 }
 
 void execute_output_redirect_cmd(char * cmd, char * fname){
-    printf("hi?");
     printf("fname: %s \n", fname);
 
     char * argv[MAX_ARGV];  /* array of command arguments*/
@@ -139,21 +131,20 @@ void execute_output_redirect_cmd(char * cmd, char * fname){
             printf("file error");
         }
 
-    // use  dup2 to redirect ouput to fd  
+    /* use  dup2 to redirect ouput to fd  */ 
         dup2(fd, 1);
         close(fd);
 
-        //printf("I'm the child, I'm running the command \n");
         execvp(argv[0], argv);
 
         printf("Oops, that command didn't work. Try something else. \n");
 
         exit(1);
     }
+        
     /*parent waits for child to finish*/
 
     else {
-        //printf("I'm the parent, I'm going to wait \n"); 
         wait(0);
 
     }
@@ -161,9 +152,7 @@ void execute_output_redirect_cmd(char * cmd, char * fname){
 
     }
     
-    
     void execute_input_redirect_cmd(char * cmd, char * fname){
-
 
 
     char * argv[MAX_ARGV];  /* array of command arguments*/
@@ -293,13 +282,14 @@ void execute_piped_cmd (char * cmd1, char * cmd2){
                 printf("command two: [%s] \n", cmd2_argv[0]);
                 printf("in child two \n");
 
-             // close write end of pipe
+             /* close write end of pipe */ 
              close(p[1]);
 
-            //redirect stdin to read end of pipe
+            /* redirect stdin to read end of pipe */ 
             dup2(p[0], 0);
 
-            // call execvp cmd_2[argv]. if execvp fails, close read end of pipe 
+            /* call execvp cmd_2[argv]. if execvp fails, close read end of pipe */ 
+                
             int exec = execvp(cmd2_argv[0], cmd2_argv);
             if (exec == -1){
                 printf("failed to execute cmd 2 \n");
@@ -331,25 +321,14 @@ int main()
 
     char buffer[MAX_CMD]; 
 
-
-    //execute_input_redirect_cmd("sort -r", "animals.txt");
     execute_output_redirect_cmd("ps -f", "brandnewfile.txt");
-
-    //execute_piped_cmd("ps", "wc");
-    //execute_piped_cmd("ps -f", "wc -c");
-
-
     
-
     while (running !=0){
 
         /*read user input into buffer*/
-      
-        //printf("buffer reads: %s", buffer);
-
-        printf("%ssmartshell!! \n", prompt_color);
+    
+        printf("%welcome to smartshell!! \n", prompt_color);
         fgets(buffer, MAX_CMD, stdin);
-        //printf("user has entered _%s_ \n", buffer);
 
         char * pipe;
         pipe = strchr(buffer, '|');
@@ -445,9 +424,8 @@ int main()
        
 
         else {
-            //printf("else");
             execute_cmd(buffer);
-            //printf("we're back \n");
+          
         }
 
     }
@@ -466,34 +444,3 @@ int main()
 
     
 }
-
-
-
-
-        /*else if (strncmp(buffer, "x", 1) == 0){
-            printf("testing pipe tokenizer \n");
-
-            //tokenize_by_pipe
-
-            char * pipeargs[MAX_PIPES];
-            char pipe_cmd_copy[MAX_CMD];
-
-            char * wee; 
-            wee = "something| booo hiss  ";
-            strcpy(pipe_cmd_copy, wee);
-
-            printf("pipe_cmd_copy: %s \n", pipe_cmd_copy);
-             
-            tokenize_by_pipe(pipe_cmd_copy, MAX_PIPES, pipeargs);
-            int i; 
-            printf("%s", pipeargs[0]);
-            //printf(argv[0]);
-            for (i=0; i <= 1;){
-                printf("%d", i);
-                printf("%s \n", pipeargs[i]);
-                i++;
-            }
-           break;
-   
-
-        } */ 
